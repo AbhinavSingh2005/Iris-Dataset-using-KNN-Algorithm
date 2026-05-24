@@ -1,0 +1,84 @@
+# import the libraries 
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split 
+from collections import Counter 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.preprocessing import LabelEncoder
+
+print("Import libraries successful")
+
+# load the dataset 
+data = pd.read_csv("Iris.csv")
+print("File read successful")
+
+df = pd.DataFrame(data)
+df
+
+# separating the dataset for training and testing 
+X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.2, random_state = 42)
+
+# creating model 
+knn = KNeighborsClassifier(n_neighbors = 5)
+
+# training the model 
+knn.fit (X_train, y_train)
+
+y_pred = knn.predict (X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(accuracy)
+
+# confusion matrix
+print(confusion_matrix(y_test, y_pred))
+
+# Classification report
+print(classification_report(y_test, y_pred))
+
+# Create confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,5))
+plt.imshow(cm, cmap='Blues')
+
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+
+# adding labels
+classes = np.unique(y)
+plt.xticks(np.arange(len(classes)), classes)
+plt.yticks(np.arange(len(classes)), classes)
+
+# adding values inside matrix
+for i in range(len(classes)):
+    for j in range(len(classes)):
+        plt.text(j, i, cm[i, j],
+                 ha='center',
+                 va='center',
+                 color='red')
+
+plt.colorbar()
+plt.show()
+
+# Convert string labels to numeric
+le = LabelEncoder()
+y_encoded = le.fit_transform(y) 
+
+plt.figure(figsize=(8,6))
+
+# plot each class separately
+for i, class_name in enumerate(le.classes_):
+    plt.scatter(X[y_encoded == i, 0],
+                X[y_encoded == i, 1],
+                label=class_name,
+                s=100)
+
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.title("Iris Dataset Scatter Plot")
+plt.legend(title="Classes")
+plt.grid(True)
+plt.show()
