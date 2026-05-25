@@ -17,6 +17,10 @@ print("File read successful")
 df = pd.DataFrame(data)
 df
 
+# separate features and target
+X = df.iloc[:, 1:-1]   # all columns except Id and Species
+y = df.iloc[:, -1]     # target column (Species)
+
 # separating the dataset for training and testing 
 X_train, X_test, y_train, y_test = train_test_split (X, y, test_size = 0.2, random_state = 42)
 
@@ -71,8 +75,8 @@ plt.figure(figsize=(8,6))
 
 # plot each class separately
 for i, class_name in enumerate(le.classes_):
-    plt.scatter(X[y_encoded == i, 0],
-                X[y_encoded == i, 1],
+    plt.scatter(X.iloc[y_encoded == i, 0],
+                X.iloc[y_encoded == i, 1],
                 label=class_name,
                 s=100)
 
